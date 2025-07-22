@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>O Level Biology Demo – Osmosis & Diffusion</title>
+  <meta name="description" content="Demo portfolio site for O/A Level Biology topical notes (Osmosis & Diffusion)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #2563eb; /* blue */
+      --brand-hover: #1e4fbf;
+      --bg: #f9fafb;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-light: #475569;
+      --radius: 16px;
+      --shadow: 0 4px 16px rgba(0,0,0,.08);
+    }
+    * {box-sizing:border-box;}
+    html,body{margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.5;}
+    a{text-decoration:none;color:var(--brand);}a:hover{text-decoration:underline;color:var(--brand-hover);}
+    img{max-width:100%;height:auto;}
+    .container{max-width:960px;margin:0 auto;padding:1.5rem;}
+    header{text-align:center;padding:2rem 1rem;}
+    header h1{margin:.25em 0;font-size:clamp(1.75rem,5vw,2.75rem);font-weight:700;color:var(--brand);}    
+    header p{margin:0;color:var(--text-light);font-size:1.1rem;}
+    .subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1.5rem;margin-top:2rem;}
+    .card{background:var(--card-bg);padding:2rem 1.5rem;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;transition:transform .15s ease,box-shadow .15s ease;cursor:pointer;}
+    .card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12);}    
+    .card h3{margin:.5em 0;font-size:1.25rem;font-weight:600;}
+    .breadcrumb{font-size:.9rem;margin-bottom:1.5rem;color:var(--text-light);}    
+    .topic-list{list-style:none;margin:0;padding:0;}
+    .topic-item{margin-bottom:1rem;}
+    .topic-card{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);transition:transform .1s ease;}
+    .topic-card:hover{transform:translateX(4px);}    
+    .topic-card h4{margin:0;font-size:1.1rem;font-weight:600;color:var(--text);}    
+    .topic-meta{font-size:.85rem;color:var(--text-light);}    
+    .btn{display:inline-block;padding:.75rem 1.25rem;font-size:1rem;font-weight:600;border-radius:8px;background:var(--brand);color:#fff;border:none;cursor:pointer;transition:background .15s ease,transform .1s ease;}
+    .btn:hover{background:var(--brand-hover);transform:translateY(-2px);}    
+    .note-wrapper{background:var(--card-bg);padding:1.5rem;border-radius:var(--radius);box-shadow:var(--shadow);}
+    .note-wrapper h2{margin-top:0;}
+    .pdf-frame{width:100%;height:70vh;border:none;border-radius:var(--radius);}
+    footer{text-align:center;padding:4rem 1rem 2rem;color:var(--text-light);font-size:.85rem;}
+    @media (prefers-color-scheme:dark){
+      :root{--bg:#0f172a;--card-bg:#1e293b;--text:#f1f5f9;--text-light:#cbd5e1;--shadow:0 4px 16px rgba(0,0,0,.6);}a{color:#93c5fd;}a:hover{color:#bfdbfe;}
+    }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <h1>O/A Level Topical Notes</h1>
+    <p>Demo portfolio site Biology: Osmosis & Diffusion.</p>
+  </header>
+
+  <!-- Main app root -->
+  <main id="app" class="container"></main>
+
+  <footer>
+    Built by Armughan for portfolio.
+  </footer>
+
+  <script>
+  /*************************************************
+   * SIMPLE CLIENT-SIDE ROUTER DEMO
+   * Routes:
+   *   #/            -> Home (subjects)
+   *   #/biology     -> Subject page (topics)
+   *   #/biology/osmosis-diffusion -> Note view
+   *************************************************/
+
+  const DATA = {
+    subjects: [
+      {
+        id: 'biology',
+        name: 'Biology',
+        blurb: 'Core concepts for O/A Level Biology.',
+        topics: [
+          {
+            id: 'osmosis-diffusion',
+            title: 'Osmosis & Diffusion',
+            description: 'Movement of water & molecules across membranes.',
+            // Put your actual PDF in /notes/biology/ here and update path:
+            pdf: 'notes/biology/osmosis_diffusion_demo.pdf',
+            size: '350 KB',
+            level: 'O Level Core',
+            updated: '2025-07-22'
+          }
+        ]
+      }
+    ]
+  };
+
+  /* ----------------- Routing Helpers ----------------- */
+  function routeParts(){
+    const hash = window.location.hash || '#/';
+    const clean = hash.replace(/^#\//,''); // removes leading #/
+    return clean.split('/').filter(Boolean); // array of parts
+  }
+
+  function navigate(path){
+    window.location.hash = path; // triggers hashchange -> render()
+  }
+
+  /* ----------------- Render Functions ----------------- */
+  const appEl = document.getElementById('app');
+
+  function renderHome(){
+    appEl.innerHTML = '';
+
+    const grid = document.createElement('div');
+    grid.className = 'subject-grid';
+
+    DATA.subjects.forEach(sub => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<h3>${sub.name}</h3><p>${sub.blurb}</p>`;
+      card.addEventListener('click', () => navigate(`#/` + sub.id));
+      grid.appendChild(card);
+    });
+
+    appEl.appendChild(grid);
+  }
+
+  function renderSubject(subjectId){
+    const subject = DATA.subjects.find(s => s.id === subjectId);
+    if(!subject){ renderNotFound(); return; }
+
+    appEl.innerHTML = '';
+
+    const crumb = document.createElement('div');
+    crumb.className = 'breadcrumb';
+    crumb.innerHTML = `<a href="#/">Home</a> / ${subject.name}`;
+    appEl.appendChild(crumb);
+
+    const ul = document.createElement('ul');
+    ul.className = 'topic-list';
+
+    subject.topics.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'topic-item';
+      li.innerHTML = `\n        <div class="topic-card" role="button">\n          <div>\n            <h4>${t.title}</h4>\n            <div class="topic-meta">${t.level} • Updated ${t.updated} • ${t.size}</div>\n          </div>\n          <button class="btn" aria-label="Open ${t.title}">Open</button>\n        </div>\n      `;
+      li.querySelector('.topic-card').addEventListener('click', () => navigate(`#/` + subject.id + '/' + t.id));
+      ul.appendChild(li);
+    });
+
+    appEl.appendChild(ul);
+  }
+
+  function renderNote(subjectId, topicId){
+    const subject = DATA.subjects.find(s => s.id === subjectId);
+    if(!subject){ renderNotFound(); return; }
+    const topic = subject.topics.find(t => t.id === topicId);
+    if(!topic){ renderNotFound(); return; }
+
+    appEl.innerHTML = '';
+
+    const crumb = document.createElement('div');
+    crumb.className = 'breadcrumb';
+    crumb.innerHTML = `<a href="#/">Home</a> / <a href="#/${subject.id}">${subject.name}</a> / ${topic.title}`;
+    appEl.appendChild(crumb);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'note-wrapper';
+    wrap.innerHTML = `\n      <h2>${topic.title}</h2>\n      <p>${topic.description}</p>\n      <p><a class="btn" href="${topic.pdf}" download>Download PDF</a></p>\n      <iframe class="pdf-frame" src="${topic.pdf}"></iframe>\n    `;
+    appEl.appendChild(wrap);
+  }
+
+  function renderNotFound(){
+    appEl.innerHTML = '<p>Page not found.</p>';
+  }
+
+  /* ----------------- Main Render Dispatcher ----------------- */
+  function render(){
+    const parts = routeParts();
+    if(parts.length === 0){
+      renderHome();
+    } else if(parts.length === 1){
+      renderSubject(parts[0]);
+    } else if(parts.length === 2){
+      renderNote(parts[0], parts[1]);
+    } else {
+      renderNotFound();
+    }
+  }
+
+  window.addEventListener('hashchange', render);
+  window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>
